@@ -9,12 +9,15 @@
 		<hr>
         <li >
             <a href="<?= APP_URL ?>/img/presentation.mp4">
-                 <i class="fa fa-play fa-2x"></i><span class="nav-text">What's AvailabilityWeb ?</span>
+                 <i class="fa fa-git fa-2x"></i><span class="nav-text">What's AvailabilityWeb ?</span>
             </a>
         </li>
 		<hr>
-
-    
+        <li >
+            <a href="https://github.com/Hytachi182/Availability">
+                <i class="fa fa-eye fa-2x"></i><span class="nav-text">Git</span>
+            </a>
+        </li>
         <li >
             <a href="<?= APP_URL ?>/statusItems.php">
                 <i class="fa fa-eye fa-2x"></i><span class="nav-text">Status</span>
@@ -34,12 +37,5 @@
 
     </ul>
 
-    <ul class="logout">
-      
-        <li>
-            <a href="<?= APP_URL ?>/logout.php">
-                <i class="fa fa-power-off fa-2x"></i><span class="nav-text">Logout</span>
-            </a>
-        </li>
-    </ul>
+   
 </nav>
