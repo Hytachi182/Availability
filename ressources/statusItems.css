@@ -1,0 +1,342 @@
+
+
+
+  html {
+    background: #f1f1ee;
+  
+    color: #333;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  b {font-weight: bold;}
+  
+  header {
+    margin: 0 auto;
+    width: 700px;
+  }
+  
+  .wrapper {
+    margin: 0 auto 30px;
+    width: 1500px;
+    box-shadow: 0 0 5px #ddd;
+  }
+
+  
+  section {
+    background: #fff;
+  }
+  
+  .status {
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .status article {
+    padding: 50px 30px;
+  }
+  
+  .status .led {
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    display: inline-block;
+  }
+  
+  .status h2 {
+    margin: 0 21px;
+    display: inline-block;
+    font-size: 2.2rem;
+  }
+  
+  .status p {
+    margin: 10px 39px 0;
+  
+    color: #999;
+    font-size: 1.3rem;  
+  }
+  
+  .info {
+    border-bottom: 1px solid #eee;
+  }
+  
+  .info article {
+    padding: 15px 0 30px 69px;
+  }
+  
+  .info .service-label {
+    float: left;
+    
+    color: #999;
+    font-size: 1.3rem;
+  }
+  
+  .info .duration-label {
+    float: left;
+    margin: 0 0 0 55px;
+    
+    color: #999;
+    font-size: 1.3rem;
+  }
+  
+  .stats article {
+    padding: 20px 70px 10px 70px;
+  }
+  
+  .stats article:last-child {
+    padding: 40px 70px 75px 70px;
+  }
+  
+  .service {
+    float: left;
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+  
+  .chart {
+    float: right;
+    margin-right:23%;
+  }
+  
+  .bar {
+    float: left;
+    width: 11px;
+    height: 30px;
+    border-left: 1px solid #fff;
+    cursor: pointer;
+  }
+  .bar:hover {
+    transform: translateY(-8px); /* Soulever la barre lors du survol */
+}
+  
+  .legend {
+    border-top: 1px solid #eee;
+    border-radius: 0 0 4px 4px;
+  }
+  
+  .legend article {
+    padding: 30px 0 40px 197px;
+  }
+  
+  .legend-colour {
+    margin: 0 0 0 20px;
+    float: left;
+    width: 10px;
+    height: 10px;
+  }
+  
+  .legend p {
+    float: left;
+    margin: 0 10px;
+  
+    color: #777;
+    font-size: 1.1rem;
+  }
+  
+  .green {
+    background: #17d766;
+    background: -moz-linear-gradient(top,  #17d766 0%, #17d766 50%, #16cf62 51%, #16cf62 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#17d766), color-stop(50%,#17d766), color-stop(51%,#16cf62), color-stop(100%,#16cf62));
+    background: -webkit-linear-gradient(top,  #17d766 0%,#17d766 50%,#16cf62 51%,#16cf62 100%);
+    background: -ms-linear-gradient(top,  #17d766 0%,#17d766 50%,#16cf62 51%,#16cf62 100%);
+    background: linear-gradient(to bottom,  #17d766 0%,#17d766 50%,#16cf62 51%,#16cf62 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#17d766', endColorsGradientType=0);
+    opacity: 0.8;
+    filter:alpha(opacity=80);
+  }
+  
+  .green-text {
+    color: #17d766;
+  }
+  
+  .yellow {
+    background: #ffcc00;
+    background: -moz-linear-gradient(top,  #ffcc00 0%, #ffcc00 50%, #eabb00 51%, #eabb00 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffcc00), color-stop(50%,#ffcc00), color-stop(51%,#eabb00), color-stop(100%,#eabb00));
+    background: -webkit-linear-gradient(top,  #ffcc00 0%,#ffcc00 50%,#eabb00 51%,#eabb00 100%);
+    background: -ms-linear-gradient(top,  #ffcc00 0%,#ffcc00 50%,#eabb00 51%,#eabb00 100%);
+    background: linear-gradient(to bottom,  #ffcc00 0%,#ffcc00 50%,#eabb00 51%,#eabb00 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#eabb00',GradientType=0);
+    opacity: 0.8;
+    filter:alpha(opacity=80);
+  }
+  
+  .yellow-text {
+    color: #ffcc00;
+  }
+  
+  .red {
+    background: #f23311;
+    background: -moz-linear-gradient(top,  #f23311 0%, #f23311 50%, #e32c0c 51%, #e32c0c 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f23311), color-stop(50%,#f23311), color-stop(51%,#e32c0c), color-stop(100%,#e32c0c));
+    background: -webkit-linear-gradient(top,  #f23311 0%,#f23311 50%,#e32c0c 51%,#e32c0c 100%);
+    background: -ms-linear-gradient(top,  #f23311 0%,#f23311 50%,#e32c0c 51%,#e32c0c 100%);
+    background: linear-gradient(to bottom,  #f23311 0%,#f23311 50%,#e32c0c 51%,#e32c0c 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f23311', endColorstr='#e32c0c',GradientType=0);
+    opacity: 0.8;
+    filter:alpha(opacity=80);
+  }
+  
+  .yellow-red {
+    color: #f23311;
+  }
+  
+  .tipsy {
+    position: absolute;
+    z-index: 999;
+    padding: 5px;
+  
+    font-size: 1.1rem;
+  }
+  
+  .tipsy-inner {
+    padding: 7px 12px 8px;
+    max-width: 200px;
+    background: #000;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px #777;
+  
+    color: #FFF;
+    line-height: 1.4rem;
+    text-align: center;
+    
+  }
+  
+  .tipsy-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 5px dashed #000;
+  
+    line-height: 0;
+  }
+  
+  .tipsy-arrow-s {border-top-color: #000;}
+  
+  .tipsy-s .tipsy-arrow {
+    margin-left: -5px;
+    bottom: 0;
+    left: 50%;
+    border-top-style: solid;
+    border-right-color: transparent;
+    border-bottom: none; 
+    border-left-color: transparent;
+  }
+  
+  
+    /*tooltip */
+    .tooltip {
+      visibility: hidden;
+      z-index: 1;
+      opacity: 0;
+      width: auto; /* Largeur automatique basée sur le contenu */
+      padding: 5px 10px; /* Ajustez le padding au besoin */
+      background: #fff; /* Fond blanc */
+      color: #333; /* Texte noir */
+      border: 1px solid #ccc; /* Bordure grise */
+      position: absolute;
+      top: 100%; /* Positionner au-dessus de l'élément parent */
+      left: 0%; /* Centrer par rapport à l'élément parent */
+      transform: translateX(0%) translateY(-100%); /* Ajuster la position */
+      border-radius: 4px; /* Bordures arrondies */
+      font-size: 16px; /* Taille de la police */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Ombre pour la profondeur */
+      transition: opacity 0.3s, visibility 0.3s, transform 0.3s; /* Transition douce */
+      white-space: nowrap; /* Empêcher le texte de passer à la ligne */
+  }
+
+  /* Flèche de la tooltip */
+  .tooltip::after {
+      content: " ";
+      position: absolute;
+      top: 100%; /* Positionner la flèche en bas de la tooltip */
+      left: 0%; /* Centrer la flèche horizontalement */
+      transform: translateX(0%) rotate(45deg);
+      width: 8px; /* Taille de la flèche */
+      height: 8px; /* Taille de la flèche */
+      background: #fff; /* Fond blanc */
+      border-left: 1px solid #ccc; /* Bordure grise */
+      border-top: 1px solid #ccc; /* Bordure grise */
+      box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.1); /* Petite ombre pour la flèche */
+  }
+
+  /* Afficher la tooltip au survol */
+  .custom-tooltip:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(0%) translateY(-120%); /* Déplacer au-dessus de la barre */
+  }
+
+  /* Animation au survol */
+  @keyframes bobbyAnimTooltips {
+      0% { transform: translateY(6px); }
+      100% { transform: translateY(1px); }
+  }
+
+  /* Style supplémentaire au survol */
+  .custom-tooltip:hover .tooltip {
+      animation: bobbyAnimTooltips 1s ease-in-out infinite alternate;
+  }
+
+
+
+  /* TOOLTIP URL */
+      .tooltip-url {
+        visibility: hidden;
+        position: absolute;
+        background-color: #333;
+        color: white;
+        padding: 5px;
+        border-radius: 6px;
+        z-index: 5;
+    }
+
+    .info-btn:hover .tooltip-url {
+        visibility: visible;
+    }
+    .info-btn {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 20px; /* Ajustez la taille de l'icône */
+      color: #007bff; /* Couleur de l'icône */
+  }
+
+  .info-btn:hover {
+      color: #0056b3; /* Couleur de l'icône au survol */
+  }
+
+
+
+.status-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px; /* Ajustez en fonction de vos besoins */
+}
+
+.status-bar-labels span {
+  display: inline-block;
+  background: #fff;
+  padding: 2px 10px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.status-bar {
+  height: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.background-bar {
+  height: 5px;
+  background-color: #ccc;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+}

@@ -1,0 +1,12 @@
+<?php
+    //DATASOURCE
+    define ("SOURCES", array(
+        SCHEMA => array(
+            "host" => "192.168.1.1",
+            "user" => "myDBUser",
+            "pwd" => "myPawwsord",
+            "schema" => SCHEMA,
+            "port" => 3306,
+        )
+    ));
+?>
