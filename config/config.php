@@ -7,7 +7,7 @@ session_start();
 require  ($_SERVER['DOCUMENT_ROOT'] . '/AvailabilityWeb/config/global.functions.php');
 
 //GLOBAL VAR
-define ("ROOT_URL",  "http://" . $_SERVER['HTTP_HOST']);
+define ("ROOT_URL",  "https://" . $_SERVER['HTTP_HOST']);
 define ("SUBFOLDER", "AvailabilityWeb");
 define ("APP_URL",   ROOT_URL . "/" . SUBFOLDER);
 define ("APPLICATION_NAME", "AvailabilityWeb");
