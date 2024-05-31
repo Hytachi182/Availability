@@ -10,9 +10,7 @@
 include ($_SERVER['DOCUMENT_ROOT'] . '/AvailabilityWeb/config/config.php'); 
 
 
-
-if(isset($_GET['id']) && isset($_GET['date'])) {
-
+if (isset($_GET['id']) && isset($_GET['date'])) {
     $id = $_GET['id'];
     $date = $_GET['date'];
 
@@ -22,12 +20,26 @@ if(isset($_GET['id']) && isset($_GET['date'])) {
     $sql = "SELECT * FROM AvailabilityWeb.t_dependencies_logs WHERE id_dependencies ='".$id."' AND date ='".$date."';";
     $logs = MYSQLI___request($MYSQLI_connection, $sql)['query_result'];
 
+    if (empty($logs)) {
+        echo json_encode([
+            'tableHtml' => '<p>No data available</p>',
+            'graphData' => json_encode([
+                'labels' => [],
+                'data' => [],
+                'backgroundColors' => []
+            ]),
+            'responseTimeData' => json_encode([
+                'labels' => [],
+                'data' => []
+            ])
+        ]);
+        exit;
+    }
 
     $sql = "SELECT * FROM AvailabilityWeb.t_dependencies WHERE id='".$logs[0]['id_dependencies'] ."' ";
-
     $dependancy = MYSQLI___request($MYSQLI_connection, $sql)['query_result'][0];
 
-     //---------------------------------------------------------------------
+    //---------------------------------------------------------------------
     // TABLE
     $tableHtml = "
         <h2>".$dependancy['name']."</h2>
@@ -61,7 +73,7 @@ if(isset($_GET['id']) && isset($_GET['date'])) {
             $contentType = $logEntry['content_type'];
         
             $badgeClass = ($httpCode === 200 || $httpCode === 302 || $httpCode === 401) ? 'bg-success' : 'bg-danger';
-            $httpCodeBadge = "<div class='badge {$badgeClass}'>{$httpCode}</div>";
+            $httpCodeBadge = "<span class='badge {$badgeClass}'>{$httpCode}</span>";
         
             $date = new DateTime($timestamp);
             $formattedDate = $date->format('Y-m-d H:i:s');
@@ -78,11 +90,10 @@ if(isset($_GET['id']) && isset($_GET['date'])) {
                             <td>{$contentType}</td>
                           </tr>";
         }
-    
-        $tableHtml .= "</tbody>
-                        </table>";
-      
     }  
+
+    $tableHtml .= "</tbody>
+                    </table>";
 
     //---------------------------------------------------------------------
     // GRAPH
@@ -115,34 +126,31 @@ if(isset($_GET['id']) && isset($_GET['date'])) {
     ];
 
     //---------------------------------------------------------------------
-        $responseTimeData = [
-            'labels' => [],
-            'data' => []
-        ];
+    $responseTimeData = [
+        'labels' => [],
+        'data' => []
+    ];
 
-        foreach ($logs as $log) {
-            $logEntries = json_decode($log['data'], true);
-            foreach ($logEntries as $timestamp => $logEntry) {
-                $date = new DateTime($timestamp);
-                $hour = $date->format('H');
+    foreach ($logs as $log) {
+        $logEntries = json_decode($log['data'], true);
+        foreach ($logEntries as $timestamp => $logEntry) {
+            $date = new DateTime($timestamp);
+            $hour = $date->format('H');
 
-                if (!in_array($hour, $responseTimeData['labels'])) {
-                    array_push($responseTimeData['labels'], $hour);
-                    array_push($responseTimeData['data'], $logEntry['response_time']);
-                }
+            if (!in_array($hour, $responseTimeData['labels'])) {
+                array_push($responseTimeData['labels'], $hour);
+                array_push($responseTimeData['data'], $logEntry['response_time']);
             }
         }
+    }
 
-        $encodedResponseTimeData = json_encode($responseTimeData);
+    $encodedResponseTimeData = json_encode($responseTimeData);
 
-        $response['responseTimeData'] = $encodedResponseTimeData;
+    $response['responseTimeData'] = $encodedResponseTimeData;
 
-        echo json_encode($response);
-            
+    echo json_encode($response);
 }
-
 ?>
-    
 
 
 
