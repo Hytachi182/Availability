@@ -300,159 +300,244 @@
     </div>
 
     <script>
-        $(document).ready(function() {
+    $(document).ready(function() {
 
+        let availabilityChart; 
+        let responseTimeChart; 
 
-            $('[id^="percentage_"]').each(function() {
-                var itemName = this.id.split('_')[1].replace(/ /g, '\\ '); // Échappez les espaces
-                var percentageValue = $(this).text();
-                $('#available_' + itemName).text(percentageValue + ' % available');
-            });
+        $('[id^="percentage_"]').each(function() {
+            var itemName = this.id.split('_')[1].replace(/ /g, '\\ '); // Échappez les espaces
+            var percentageValue = $(this).text();
+            $('#available_' + itemName).text(percentageValue + ' % available');
+        });
 
+        $('#duration').change(function() {
+            $(this).closest('form').submit();
+        });
 
-            //SUGMIT FORM WHEN SELEC CHANGE
+        $('[data-bs-togglebis="tooltip"]').tooltip();
 
-            $('#duration').change(function() {
-                $(this).closest('form').submit();
-            });
+        $('.info-btn').hover(function() {
+            var url = $(this).data('url');
+            var tooltip = $('<div class="tooltip-url">' + url + '</div>');
+            $(this).append(tooltip);
+            tooltip.fadeIn();
+        }, function() {
+            $('.tooltip-url').remove();
+        });
 
-            //TOOLTIP
-            $('[data-bs-togglebis="tooltip"]').tooltip();
+        $('#detailsModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var id = button.data('id'); // Récupérer id de l'élément cliqué
+    var date = button.data('date'); // Récupérer la date de l'élément cliqué
+    var name = button.data('name'); // Récupérer le nom de l'élément cliqué
 
-            $('.info-btn').hover(function() {
-                var url = $(this).data('url');
-                var tooltip = $('<div class="tooltip-url">' + url + '</div>');
-                $(this).append(tooltip);
-                tooltip.fadeIn();
-            }, function() {
-                $('.tooltip-url').remove();
-            });
+    var modalTitle = name + " - " + date;
+    $(this).find('#modal-title-custom').text(modalTitle);
 
-            $('#detailsModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var id = button.data('id'); // Récupérer id de l'élément cliqué
-                var date = button.data('date'); // Récupérer la date de l'élément cliqué
-                var name = button.data('name'); // Récupérer la date de l'élément cliqué
+    $.ajax({
+        url: './background/_statusItems.php',
+        type: 'GET',
+        data: {
+            'id': id,
+            'date': date
+        }, // Envoyer à la fois l'id et la date
+        success: function(response) {
+            var data = JSON.parse(response);
+            var table = $('#detailsTable');
+            table.empty();
 
-                //FOR MODAL
-                var modalTitle = name + " - " + date;
-                $(this).find('#modal-title-custom').text(modalTitle);
+            if (data.tableHtml && data.tableHtml.trim() !== "") {
+                table.html(data.tableHtml);
 
-                //AJAX
-                $.ajax({
-                    url: './background/_statusItems.php',
-                    type: 'GET',
-                    data: {
-                        'id': id,
-                        'date': date
-                    }, // Envoyer à la fois l'id et la date
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        var table = $('#detailsTable');
-                        table.empty();
-                        table.html(data.tableHtml);
+                var responseTimeData = JSON.parse(data.responseTimeData);
+                createResponseTimeChart(responseTimeData);
 
-                        // Préparation et création du graphique
-                        var graphData = JSON.parse(data.graphData);
+                var graphData = JSON.parse(data.graphData);
+                createAvailabilityChart(graphData);
 
-                        // Créer le graphique de disponibilité
-                        createAvailabilityChart(graphData);
+                new DataTable('#data');
+            } else {
+                table.html("<p>No data available</p>");
+                $('#availabilityChart').remove(); // Optionnel : Supprimer le canvas si pas de données
+                $('#responseTimeChart').remove(); // Optionnel : Supprimer le canvas si pas de données
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("error : " + error);
+        }
+    });
+});
 
-                        // Créer le graphique des temps de réponse
-                        var responseTimeData = JSON.parse(data.responseTimeData);
-                        createResponseTimeChart(responseTimeData)
-
-                        //DATATABLE
-                        new DataTable('#data');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("error : " + error);
+function createAvailabilityChart(graphData) {
+    const ctx = document.getElementById('availabilityChart').getContext('2d');
+    if (availabilityChart) {
+        availabilityChart.destroy(); // Détruire le graphique précédent s'il existe
+    }
+    availabilityChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: graphData.labels,
+            datasets: [{
+                label: 'Availability per hour',
+                data: graphData.data,
+                backgroundColor: graphData.backgroundColors
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        max: 1 // Car les valeurs sont soit 0, soit 1
                     }
-                });
-            });
+                },
+                x: {
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Hour'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
+}
 
-            function createAvailabilityChart(graphData) {
-                const ctx = document.getElementById('availabilityChart').getContext('2d');
-                const availabilityChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: graphData.labels,
-                        datasets: [{
-                            label: 'Availibility per hour',
-                            data: graphData.data,
-                            backgroundColor: graphData.backgroundColors
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true,
-                                    stepSize: 1,
-                                    max: 1 // Car les valeurs sont soit 0, soit 1
-                                }
-                            }],
-                            xAxes: [{
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Hour'
-                                }
-                            }]
+function createResponseTimeChart(responseTimeData) {
+    const ctx = document.getElementById('responseTimeChart').getContext('2d');
+    if (responseTimeChart) {
+        responseTimeChart.destroy(); // Détruire le graphique précédent s'il existe
+    }
+    responseTimeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: responseTimeData.labels,
+            datasets: [{
+                label: 'Response time',
+                data: responseTimeData.data,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Response time (seconds)'
+                    }
+                },
+                x: {
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Hours'
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+        function createAvailabilityChart(graphData) {
+            const ctx = document.getElementById('availabilityChart').getContext('2d');
+            if (availabilityChart) {
+                availabilityChart.destroy(); // Détruire le graphique précédent s'il existe
+            }
+            availabilityChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: graphData.labels,
+                    datasets: [{
+                        label: 'Availability per hour',
+                        data: graphData.data,
+                        backgroundColor: graphData.backgroundColors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                max: 1 // Car les valeurs sont soit 0, soit 1
+                            }
                         },
+                        x: {
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Hour'
+                            }
+                        }
+                    },
+                    plugins: {
                         legend: {
                             display: true,
                             position: 'top'
-                        },
-
-                    }
-                });
-            }
-
-            function createResponseTimeChart(responseTimeData) {
-                const ctx = document.getElementById('responseTimeChart').getContext('2d');
-                const responseTimeChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: responseTimeData.labels,
-                        datasets: [{
-                            label: 'response time',
-                            data: responseTimeData.data,
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 2,
-                            fill: false
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                },
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'response time (seconds)'
-                                }
-                            }],
-                            xAxes: [{
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'hours'
-                                }
-                            }]
                         }
                     }
-                });
+                }
+            });
+        }
+
+        function createResponseTimeChart(responseTimeData) {
+            const ctx = document.getElementById('responseTimeChart').getContext('2d');
+            if (responseTimeChart) {
+                responseTimeChart.destroy(); // Détruire le graphique précédent s'il existe
             }
+            responseTimeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: responseTimeData.labels,
+                    datasets: [{
+                        label: 'Response time',
+                        data: responseTimeData.data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Response time (seconds)'
+                            }
+                        },
+                        x: {
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Hours'
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
-
-
-        });
-    </script>
+    });
+</script>
 </body>
 
 
